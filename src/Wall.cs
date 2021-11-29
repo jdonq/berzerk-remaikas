@@ -10,6 +10,7 @@ namespace berzerk
     {
         private Rectangle wallRec; 
         private Player player;
+        private Color wallClr = Color.BLUE;
 
 
         public Wall(Player plr, float posX, float posY, bool isHorizontal)
@@ -29,8 +30,12 @@ namespace berzerk
 
         public void DrawEntity()
         {
-            Raylib.DrawRectangleRec(wallRec, Color.BLUE);
+            Raylib.DrawRectangleRec(wallRec, wallClr);
             
+        }
+
+        public void SetAsEntryWall(){
+            wallClr = Color.RED;
         }
         
         public Rectangle returnWallCollision()

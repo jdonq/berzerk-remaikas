@@ -7,7 +7,7 @@ namespace berzerk
     class UI : IEntity
     {
         private int score = 0;
-        private int lives = 3;
+
         public void UpdateEntity()
         {
             
@@ -19,7 +19,7 @@ namespace berzerk
 
         public void DrawEntity()
         {
-            Raylib.DrawText("Score: " + score.ToString() + "\tlives: " + lives.ToString(), (Raylib.GetScreenWidth() - Raylib.GetScreenHeight())/2 + 20, Raylib.GetScreenHeight() - 40, 20, Color.RED);
+            Raylib.DrawText("Score: " + score.ToString(), (Raylib.GetScreenWidth() - Raylib.GetScreenHeight())/2 + 20, Raylib.GetScreenHeight() - 40, 20, Color.GREEN);
         }
     }
 }

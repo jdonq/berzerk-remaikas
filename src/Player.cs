@@ -28,9 +28,10 @@ namespace berzerk
             playerPosition = startingPosition;
         }
 
-        public void setBulletManager(BulletManager blt){
+        public void SetBulletManager(BulletManager blt){
             bulletManager = blt;
         }
+        
         public Rectangle GetPlayerCollision()
         {
             return playerCollider;

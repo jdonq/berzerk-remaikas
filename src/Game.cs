@@ -16,10 +16,8 @@ namespace berzerk
         Player player;
         UI hud = new UI();
         Arena firstArena;
-        BulletManager bulletManager;
         Image horizontalGradient = Raylib.GenImageGradientH(Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), Color.RED, Color.BLUE);
         Texture2D gradient;
-        List<Robot> robots = new List<Robot>();
         MainMenu menu = new MainMenu();
         Timer deathStateTimer = new Timer(2);
 
@@ -28,19 +26,10 @@ namespace berzerk
 
         public void InitializeContent()
         {
-            player = new Player(new Vector2 (200f, 200f));
-            firstArena = new Arena(player);
-            bulletManager = new BulletManager(player, firstArena.ReturnArenaWalls());
-            player.setBulletManager(bulletManager);
+            player = new Player(new Vector2 (180f, 200f));
+            firstArena = new Arena(player, 0, hud);
+            player.SetBulletManager(firstArena.ReturnArenaBulletManager());
             gradient = Raylib.LoadTextureFromImage(horizontalGradient);
-
-            robots.Clear();
-
-            robots.Add(new Robot(player, new Vector2(400f, 200f), bulletManager, firstArena.ReturnArenaWalls(), hud));
-            //robots.Add(new Robot(player, new Vector2(200f, 100f), bulletManager, firstArena.ReturnArenaWalls(), hud));
-            //robots.Add(new Robot(player, new Vector2(600f, 300f), bulletManager, firstArena.ReturnArenaWalls(), hud));
-            //robots.Add(new Robot(player, new Vector2(400f, 100f), bulletManager, firstArena.ReturnArenaWalls(), hud));
-            //robots.Add(new Robot(player, new Vector2(600f, 200f), bulletManager, firstArena.ReturnArenaWalls(), hud));
         }
         
         public void Update()
@@ -56,12 +45,35 @@ namespace berzerk
             } else {
                 firstArena.UpdateEntity();
                 player.UpdateEntity();
-                bulletManager.UpdateEntity();
 
-                foreach(Robot rs in robots)
-                    rs.UpdateEntity();
+                if(firstArena.CheckIfPlayerLeftArena())
+                {
+                    int enterPos = firstArena.GetExitedZone();
+                    
+                    if(enterPos == 0)
+                    {
+                        player = new Player(new Vector2 (180f, 200f));
+                    }
+                    if(enterPos == 1)
+                    {
+                        player = new Player(new Vector2 (400f, 30f));
+                    }
+                    if(enterPos == 2)
+                    {
+                        player = new Player(new Vector2 (620f, 200f));
+                    }
+                    if(enterPos == 3)
+                    {
+                        player = new Player(new Vector2 (400f, 390f));
+                    }
 
-                if(player.ReturnPlayerState() && deathStateTimer.UpdateTimer()){
+                    firstArena = new Arena(player, enterPos, hud);
+                    player.SetBulletManager(firstArena.ReturnArenaBulletManager());
+                }
+
+
+                if(player.ReturnPlayerState() && deathStateTimer.UpdateTimer())
+                {
                     gameState = GameState.Menu;
                     menu.setMenuState();
                 }
@@ -80,9 +92,6 @@ namespace berzerk
                 Raylib.DrawText("Berzerk", 12, 12, 25, Color.RED);
                 hud.DrawEntity();
                 player.DrawEntity();
-                bulletManager.DrawEntity();
-
-                foreach(Robot rs in robots)rs.DrawEntity();
             }
         }
     }

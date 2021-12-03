@@ -148,7 +148,7 @@ namespace berzerk
         {
             foreach(Wall wx in walls)
             {
-                if(Raylib.CheckCollisionRecs(robotCollision, wx.returnWallCollision()))
+                if(Raylib.CheckCollisionRecs(robotCollision, wx.ReturnWallCollision()))
                 {
                     if(!isRobotDead)KillRobot();
                 }

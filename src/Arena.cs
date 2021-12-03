@@ -9,22 +9,18 @@ namespace berzerk
 {
     class Arena : IEntity
     {
-        //private Wall[] boundWalls = new Wall[12];
-        private Wall[] hWalls = new Wall[10];
-        private Wall[] vWalls = new Wall[12];
         private int exitedZone = 0;
         private List<Wall>arenaWalls = new List<Wall>();
         private Player player;
         private Random randomSeed = new Random();
         private BulletManager bulletManager;
         private List<Rectangle> exitZones = new List<Rectangle>();
-        List<Robot> robots = new List<Robot>();
+        private List<Robot> robots = new List<Robot>();
+        private Direction[,] cells = new Direction[3, 5] {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
 
         public Arena(Player plr, int playerEntryPos, UI hud)
         {
             player = plr;
-
-            GenerateArena(playerEntryPos);
 
             bulletManager = new BulletManager(player, arenaWalls);
 
@@ -42,31 +38,7 @@ namespace berzerk
             //arenaWalls.Add(new Wall(player, 360f, 300f, true));
             //arenaWalls.Add(new Wall(player, 460f, 160f, true));
 
-            
-            vWalls[0]  = new Wall(player, 260f, 20f,  false);
-            vWalls[1]  = new Wall(player, 350f, 20f,  false);
-            vWalls[2]  = new Wall(player, 460f, 20f,  false);
-            vWalls[3]  = new Wall(player, 550f, 20f,  false);
-            vWalls[4]  = new Wall(player, 260f, 160f, false);
-            vWalls[5]  = new Wall(player, 350f, 160f, false);
-            vWalls[6]  = new Wall(player, 460f, 160f, false);
-            vWalls[7]  = new Wall(player, 550f, 160f, false);
-            vWalls[8]  = new Wall(player, 260f, 300f, false);
-            vWalls[9]  = new Wall(player, 350f, 300f, false);
-            vWalls[10] = new Wall(player, 460f, 300f, false);
-            vWalls[11] = new Wall(player, 550f, 300f, false);
-
-            hWalls[0]  = new Wall(player, 160f, 160f, true);
-            hWalls[1]  = new Wall(player, 260f, 160f, true);
-            hWalls[2]  = new Wall(player, 360f, 160f, true);
-            hWalls[3]  = new Wall(player, 460f, 160f, true);
-            hWalls[4]  = new Wall(player, 560f, 160f, true);
-            hWalls[5]  = new Wall(player, 160f, 300f, true);
-            hWalls[6]  = new Wall(player, 260f, 300f, true);
-            hWalls[7]  = new Wall(player, 360f, 300f, true);
-            hWalls[8]  = new Wall(player, 460f, 300f, true);
-            hWalls[9]  = new Wall(player, 560f, 300f, true);
-            
+            GenerateArena(playerEntryPos);   
         }
 
         public List<Wall> ReturnArenaWalls()
@@ -88,10 +60,6 @@ namespace berzerk
 
             //foreach(Robot rs in robots)
             //rs.UpdateEntity();
-            
-            foreach(Wall wx in vWalls)wx.UpdateEntity();            
-            foreach(Wall wx in hWalls)wx.UpdateEntity();
-
         }
 
         public void DrawEntity()
@@ -106,9 +74,6 @@ namespace berzerk
 
             //foreach(Robot rs in robots)
             //rs.DrawEntity();
-            
-            foreach(Wall wx in vWalls)wx.DrawEntity();
-            foreach(Wall wx in hWalls)wx.DrawEntity();
         }
 
         public int GetExitedZone()
@@ -133,6 +98,7 @@ namespace berzerk
         //playerEnterPos 0 - left, 1 - top, 2 - right, 3 - bottom
         private void GenerateArena(int playerEnterPos)
         {
+            //Arena outside walls
             arenaWalls.Add( new Wall(player, 160f, 20f,  false));
             arenaWalls.Add( new Wall(player, 160f, 10f,  true));
             arenaWalls.Add( new Wall(player, 260f, 10f,  true));
@@ -145,6 +111,32 @@ namespace berzerk
             arenaWalls.Add( new Wall(player, 260f, 440f, true));
             arenaWalls.Add( new Wall(player, 160f, 440f, true));
             arenaWalls.Add( new Wall(player, 160f, 300f, false));
+
+            //Vertical inside arena walls
+            arenaWalls.Add(new Wall(player, 260f, 20f,  false,  1));
+            arenaWalls.Add(new Wall(player, 350f, 20f,  false,  2));
+            arenaWalls.Add(new Wall(player, 460f, 20f,  false,  3));
+            arenaWalls.Add(new Wall(player, 550f, 20f,  false,  4));
+            arenaWalls.Add(new Wall(player, 260f, 160f, false,  6));
+            arenaWalls.Add(new Wall(player, 350f, 160f, false,  7));
+            arenaWalls.Add(new Wall(player, 460f, 160f, false,  8));
+            arenaWalls.Add(new Wall(player, 550f, 160f, false,  9));
+            arenaWalls.Add(new Wall(player, 260f, 300f, false, 11));
+            arenaWalls.Add(new Wall(player, 350f, 300f, false, 12));
+            arenaWalls.Add(new Wall(player, 460f, 300f, false, 13));
+            arenaWalls.Add(new Wall(player, 550f, 300f, false, 14));
+
+            //Horizontal inside arena walls
+            arenaWalls.Add(new Wall(player, 160f, 160f, true, 1));
+            arenaWalls.Add(new Wall(player, 260f, 160f, true, 2));
+            arenaWalls.Add(new Wall(player, 360f, 160f, true, 3));
+            arenaWalls.Add(new Wall(player, 460f, 160f, true, 4));
+            arenaWalls.Add(new Wall(player, 560f, 160f, true, 5));
+            arenaWalls.Add(new Wall(player, 160f, 300f, true, 6));
+            arenaWalls.Add(new Wall(player, 260f, 300f, true, 7));
+            arenaWalls.Add(new Wall(player, 360f, 300f, true, 8));
+            arenaWalls.Add(new Wall(player, 460f, 300f, true, 9));
+            arenaWalls.Add(new Wall(player, 560f, 300f, true, 10));
 
             switch(playerEnterPos)
             {
@@ -175,10 +167,96 @@ namespace berzerk
                 break;
             }
 
+            GenerateMaze(0, 0, Direction.Start);
+
             exitZones.Add(new Rectangle(660f, 160f, 10f, 140f));
             exitZones.Add(new Rectangle(360f, 450f, 100f, 10f));
             exitZones.Add(new Rectangle(150f, 160f, 10f, 140f));
             exitZones.Add(new Rectangle(360f, 0f, 100f, 10f));
+        }
+
+        private void GenerateMaze(int x, int y, Direction from)
+        {
+            
+            cells[x, y] = from;
+
+            List<Vector2>neighbours = new List<Vector2>();
+
+            if(x != 0)
+            {
+                if(cells[x - 1, y] == Direction.Unvisited)neighbours.Add(new Vector2(x - 1, y));
+            }
+
+            if(y != 0)
+            {
+                if(cells[x, y - 1] == Direction.Unvisited)neighbours.Add(new Vector2(x, y - 1));
+            }
+
+            if(y != 4)
+            {
+                if(cells[x, y + 1] == Direction.Unvisited)neighbours.Add(new Vector2(x, y + 1));
+            }
+
+            if(x != 2)
+            {
+                if(cells[x + 1, y] == Direction.Unvisited)neighbours.Add(new Vector2(x + 1, y));
+            }
+
+            while(neighbours.Count != 0)
+            {
+                int index = randomSeed.Next(neighbours.Count);
+
+                Vector2 destination = neighbours[index];
+                neighbours.RemoveAt(index);
+                Direction dir = Direction.Unvisited;
+                int cellIndex = x * 5 + y;
+
+                if(cells[(int)destination.X, (int)destination.Y] != Direction.Unvisited)
+                continue;
+
+                if(destination.X > x)
+                {
+                    dir = Direction.North;
+                    DeleteWall(cellIndex + 1, false);
+                }
+                else if(destination.X < x)
+                {
+                    dir = Direction.South;
+                    DeleteWall(cellIndex - 4, false);
+                }
+                else if(destination.Y > y)
+                {
+                    dir = Direction.West;
+                    DeleteWall(cellIndex + 1, true);
+                }
+                else if(destination.Y < y)
+                {
+                    dir = Direction.East;
+                    DeleteWall(cellIndex, true);
+                }
+
+                GenerateMaze((int)destination.X, (int)destination.Y, dir);
+            }            
+
+        }
+
+        private void DeleteWall(int cellIndex, bool vwall)
+        {
+            if(cellIndex == 0)
+            {
+                return;
+            }
+
+            for(int i = 0; i < arenaWalls.Count; i++)
+            {
+
+                if(arenaWalls[i].ReturnWallID() == cellIndex && vwall == arenaWalls[i].IsWallVertical())
+                {
+
+                    arenaWalls.RemoveAt(i);
+                    i--;
+                }
+            }
         } 
     }
 }

@@ -5,12 +5,6 @@ using Raylib_cs;
 
 namespace berzerk
 {
-    enum GameState
-    {
-        Menu,
-        Game
-    }
-
     class Game
     {
         Player player;
@@ -40,7 +34,7 @@ namespace berzerk
                 if(menu.getGameState())
                 {
                     gameState = GameState.Game;
-                    InitializeContent();
+                    //InitializeContent();      ---------------------------------!!!!!!!!!!
                 }
             } else {
                 firstArena.UpdateEntity();

@@ -55,7 +55,7 @@ namespace berzerk
             {
                 foreach(Wall wx in arenaWalls)
                 {
-                    if(Raylib.CheckCollisionRecs(wx.returnWallCollision(), bl.ReturnBulletCollision()))
+                    if(Raylib.CheckCollisionRecs(wx.ReturnWallCollision(), bl.ReturnBulletCollision()))
                     {
                         bl.DestroyBullet();
                     }

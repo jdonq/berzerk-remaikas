@@ -1,6 +1,5 @@
 using System.Numerics;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using Raylib_cs;
 
@@ -24,21 +23,8 @@ namespace berzerk
 
             bulletManager = new BulletManager(player, arenaWalls);
 
-            //robots.Clear();
-
-            //robots.Add(new Robot(player, new Vector2(400f, 200f), bulletManager, arenaWalls, hud));
-            //robots.Add(new Robot(player, new Vector2(200f, 100f), bulletManager, arenaWalls, hud));
-            //robots.Add(new Robot(player, new Vector2(600f, 300f), bulletManager, arenaWalls, hud));
-            //robots.Add(new Robot(player, new Vector2(400f, 100f), bulletManager, arenaWalls, hud));
-            //robots.Add(new Robot(player, new Vector2(600f, 200f), bulletManager, arenaWalls, hud));
-
-            //arenaWalls.Add(new Wall(player, 260f, 300f, false));
-            //arenaWalls.Add(new Wall(player, 350f, 20f,  false));
-            //arenaWalls.Add(new Wall(player, 560f, 160f, true));
-            //arenaWalls.Add(new Wall(player, 360f, 300f, true));
-            //arenaWalls.Add(new Wall(player, 460f, 160f, true));
-
-            GenerateArena(playerEntryPos);   
+            GenerateArena(playerEntryPos); 
+            GenerateRobots(hud);  
         }
 
         public List<Wall> ReturnArenaWalls()
@@ -58,8 +44,8 @@ namespace berzerk
 
             bulletManager.UpdateEntity();
 
-            //foreach(Robot rs in robots)
-            //rs.UpdateEntity();
+            foreach(Robot rs in robots)
+            rs.UpdateEntity();
         }
 
         public void DrawEntity()
@@ -68,12 +54,11 @@ namespace berzerk
             
             foreach(Wall wx in arenaWalls)
             wx.DrawEntity();
-
             
             bulletManager.DrawEntity();
 
-            //foreach(Robot rs in robots)
-            //rs.DrawEntity();
+            foreach(Robot rs in robots)
+            rs.DrawEntity();
         }
 
         public int GetExitedZone()
@@ -176,8 +161,7 @@ namespace berzerk
         }
 
         private void GenerateMaze(int x, int y, Direction from)
-        {
-            
+        {            
             cells[x, y] = from;
 
             List<Vector2>neighbours = new List<Vector2>();
@@ -237,7 +221,6 @@ namespace berzerk
 
                 GenerateMaze((int)destination.X, (int)destination.Y, dir);
             }            
-
         }
 
         private void DeleteWall(int cellIndex, bool vwall)
@@ -249,13 +232,39 @@ namespace berzerk
 
             for(int i = 0; i < arenaWalls.Count; i++)
             {
-
                 if(arenaWalls[i].ReturnWallID() == cellIndex && vwall == arenaWalls[i].IsWallVertical())
                 {
-
                     arenaWalls.RemoveAt(i);
                     i--;
                 }
+            }
+        }
+
+        private void GenerateRobots(UI hud)
+        {
+            List<Vector2> pos = new List<Vector2>();
+
+            pos.Add(new Vector2(200f, 100f));
+            pos.Add(new Vector2(300f, 100f));
+            pos.Add(new Vector2(400f, 100f));
+            pos.Add(new Vector2(500f, 100f));
+            pos.Add(new Vector2(600f, 100f));
+            pos.Add(new Vector2(220f, 200f));
+            pos.Add(new Vector2(300f, 200f));
+            pos.Add(new Vector2(400f, 200f));
+            pos.Add(new Vector2(500f, 200f));
+            pos.Add(new Vector2(580f, 200f));
+            pos.Add(new Vector2(200f, 360f));
+            pos.Add(new Vector2(300f, 360f));
+            pos.Add(new Vector2(400f, 320f));
+            pos.Add(new Vector2(500f, 360f));
+            pos.Add(new Vector2(580f, 360f));
+
+            for(int i = 0; i < 5; i++)
+            {
+                int index = randomSeed.Next(pos.Count);
+                robots.Add(new Robot(player, pos[index], bulletManager, arenaWalls, hud));
+                pos.RemoveAt(index);
             }
         } 
     }

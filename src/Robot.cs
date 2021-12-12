@@ -22,11 +22,9 @@ namespace berzerk
         private bool isRobotDead = false;
         private bool isOnLeftSide = false;
         private bool lastSide = false;
-
-
         private int currentRobotFrame = 0;
         private int framesCounter = 0;
-        private int framesSpeed = 14;
+        private int framesSpeed = 13;
 
         public Robot(Player plr, Vector2 startingPos, BulletManager blt, List<Wall> wls, UI ui)
         {
@@ -41,85 +39,50 @@ namespace berzerk
 
         public void UpdateEntity()
         {
-
-            if(!canRobotMove)
-            {
-                AnimateRobotIdle();
-            }
-
             if(coolDownTimer.UpdateTimer() && canRobotMove == false && !isRobotDead)
             {
                 canRobotMove = true;
+                if(isOnLeftSide)
+                {
+                    currentRobotFrame = 7;
+                } else {
+                    currentRobotFrame = 10;
+                }
                 moveTimer.ResetTimer();
             }
 
             if(moveTimer.UpdateTimer() && canRobotMove == true && !isRobotDead)
             {
+                robotCollision.x = MathF.Round(robotCollision.x);
+                robotCollision.y = MathF.Round(robotCollision.y);
                 canRobotMove = false;
                 coolDownTimer.ResetTimer();
             }
 
             if(canRobotMove && !isRobotDead)
             {
-                if(player.GetPlayerCollision().x - robotCollision.x < 0)
-                {
-                    isOnLeftSide = true;
-                    CheckLastSide();
-                    robotCollision.x -= 0.5f;
-                }
-                if(player.GetPlayerCollision().x - robotCollision.x > 0)
-                {
-                    isOnLeftSide = false;
-                    CheckLastSide();
-                    robotCollision.x += 0.5f;
-                }
-                if(player.GetPlayerCollision().y - robotCollision.y < 0)
-                {
-                    robotCollision.y -= 0.5f;
-                }
-                if(player.GetPlayerCollision().y - robotCollision.y > 0)
-                {
-                    robotCollision.y += 0.5f;
-                }
-
-                lastSide = isOnLeftSide;
-
-                AnimateRobotMovement();
+                MoveRobot();
             }
 
             if(shootingTimer.UpdateTimer() && !isRobotDead)
             {
-
-                float xDist = player.GetPlayerCollision().x - robotCollision.x;
-                float yDist = player.GetPlayerCollision().y - robotCollision.y;
-                bool isxDistSmaller = true;
-                
-                if(Math.Abs(xDist) > Math.Abs(yDist))isxDistSmaller = false; 
-
-                if(xDist > 0 && xDist < 150 && !isxDistSmaller)
-                {
-                    Bullet blt = new Bullet(new Vector2(1f, 0f), new Vector2(robotCollision.x + 18f, robotCollision.y + 20f), false);
-                    bulletManager.AddBullet(blt);
-                } else if(xDist < 0 && xDist > -150 && !isxDistSmaller)
-                {
-                    Bullet blt = new Bullet(new Vector2(-1f, 0f), new Vector2(robotCollision.x - 6f, robotCollision.y + 20f), false);
-                    bulletManager.AddBullet(blt);
-                } else if(yDist < 0 && xDist > -150 && isxDistSmaller)
-                {
-                    Bullet blt = new Bullet(new Vector2(0f, -1f), new Vector2(robotCollision.x + 8f, robotCollision.y - 6f), true);
-                    bulletManager.AddBullet(blt);
-                } else if(xDist > 0 && xDist < 150 && isxDistSmaller)
-                {
-                    Bullet blt = new Bullet(new Vector2(0f, 1f), new Vector2(robotCollision.x + 8f, robotCollision.y + 40f), true);
-                    bulletManager.AddBullet(blt);
-                }
-
-                //Console.WriteLine(xDist.ToString() + " " + yDist.ToString() + isxDistSmaller);
+                ShootBullet();
             }
 
-            CheckCollision();
+            if(framesCounter >= (60/framesSpeed))
+            {
+                framesCounter = 0;
+                currentRobotFrame++;
 
-            //if(isRobotDead){}
+                if(!canRobotMove)
+                AnimateRobotIdle();
+
+                AnimateRobotMovement();
+            }
+
+            framesCounter++;
+
+            CheckCollision();
         }
 
         public void KillRobot()
@@ -140,8 +103,64 @@ namespace berzerk
 
         public void DrawEntity()
         {
-            //if(!isRobotDead)Raylib.DrawRectangleRec(robotCollision, Color.RED);
-            if(!isRobotDead)Raylib.DrawTextureRec(robotTex, robotAnimationFrame, new Vector2(robotCollision.x, robotCollision.y), Color.GREEN);
+            if(!isRobotDead)
+            Raylib.DrawTextureRec(robotTex, robotAnimationFrame, new Vector2(robotCollision.x, robotCollision.y), Color.GREEN);
+        }
+
+        private void MoveRobot()
+        {
+            if(player.GetPlayerCollision().x - robotCollision.x < 0)
+            {
+                isOnLeftSide = true;
+                CheckLastSide();
+                robotCollision.x -= 0.5f;
+            }
+            if(player.GetPlayerCollision().x - robotCollision.x > 0)
+            {
+                isOnLeftSide = false;
+                CheckLastSide();
+                robotCollision.x += 0.5f;
+            }
+            if(player.GetPlayerCollision().y - robotCollision.y < 0)
+            {
+                robotCollision.y -= 0.5f;
+            }
+            if(player.GetPlayerCollision().y - robotCollision.y > 0)
+            {
+                robotCollision.y += 0.5f;
+            }
+
+            lastSide = isOnLeftSide;
+        }
+
+        private void ShootBullet()
+        {
+            float xDist = player.GetPlayerCollision().x - robotCollision.x;
+            float yDist = player.GetPlayerCollision().y - robotCollision.y;
+            bool isxDistSmaller = true;
+            
+            if(Math.Abs(xDist) > Math.Abs(yDist))isxDistSmaller = false;
+
+            if(xDist > 0 && xDist < 150 && !isxDistSmaller)
+            {
+                Bullet blt = new Bullet(new Vector2(1f, 0f), new Vector2(robotCollision.x + 18f, robotCollision.y + 20f), false);
+                bulletManager.AddBullet(blt);
+            } 
+            else if(xDist < 0 && xDist > -150 && !isxDistSmaller)
+            {
+                Bullet blt = new Bullet(new Vector2(-1f, 0f), new Vector2(robotCollision.x - 6f, robotCollision.y + 20f), false);
+                bulletManager.AddBullet(blt);
+            } 
+            else if(yDist < 0 && xDist > -150 && isxDistSmaller)
+            {
+                Bullet blt = new Bullet(new Vector2(0f, -1f), new Vector2(robotCollision.x + 8f, robotCollision.y - 6f), true);
+                bulletManager.AddBullet(blt);
+            } 
+            else if(xDist > 0 && xDist < 150 && isxDistSmaller)
+            {
+                Bullet blt = new Bullet(new Vector2(0f, 1f), new Vector2(robotCollision.x + 8f, robotCollision.y + 40f), true);
+                bulletManager.AddBullet(blt);
+            }
         }
 
         private void CheckCollision()
@@ -161,40 +180,20 @@ namespace berzerk
         }
 
         private void AnimateRobotMovement()
-        {
-            
-            if(framesCounter >= (60/framesSpeed))
-            {
-                framesCounter = 0;
+        {            
+            if(currentRobotFrame > 9 && isOnLeftSide) 
+                currentRobotFrame = 7;
+            else if(currentRobotFrame > 12 && !isOnLeftSide) 
+                currentRobotFrame = 10;
 
-                currentRobotFrame++;
-
-                if(currentRobotFrame > 9 && isOnLeftSide) 
-                    currentRobotFrame = 7;
-                else if(currentRobotFrame > 13 && !isOnLeftSide) 
-                    currentRobotFrame = 11;
-
-
-                robotAnimationFrame.x = (float)currentRobotFrame*(float)robotTex.width/13f;
-            }
-
-            framesCounter++;
+            robotAnimationFrame.x = (float)currentRobotFrame*(float)robotTex.width/13f;
         }
 
         private void AnimateRobotIdle()
         {
-            if(framesCounter >= (60/framesSpeed))
-            {
-                framesCounter = 0;
+            if(currentRobotFrame > 6) currentRobotFrame = 0;
 
-                currentRobotFrame++;
-
-                if(currentRobotFrame > 6) currentRobotFrame = 0;
-
-                robotAnimationFrame.x = (float)currentRobotFrame*(float)robotTex.width/13f;
-            }
-
-            framesCounter++;
+            robotAnimationFrame.x = (float)currentRobotFrame*(float)robotTex.width/13f;
         }
 
         private void CheckLastSide()

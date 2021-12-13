@@ -37,6 +37,7 @@ namespace berzerk
                 {
                     gameState = GameState.Game;
                     InitializeContent();
+                    hud.ResetPoints();
                 }
             } else {
                 firstArena.UpdateEntity();

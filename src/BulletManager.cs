@@ -33,9 +33,7 @@ namespace berzerk
                 foreach(Bullet blt in bullets)
                 {
                     blt.UpdateEntity();
-                    //if(blt.BulletStatus())bullets.Remove(blt);
                 }
-
             }
 
             CheckBulletCollisions();

@@ -1,4 +1,3 @@
-using System.Numerics;
 using Raylib_cs;
 
 
@@ -13,8 +12,12 @@ namespace berzerk
             
         }
 
-        public void addPoints(){
+        public void AddPoints(){
             score += 50;
+        }
+
+        public void ResetPoints(){
+            score = 0;
         }
 
         public void DrawEntity()

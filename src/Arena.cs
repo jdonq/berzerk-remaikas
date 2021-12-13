@@ -17,7 +17,7 @@ namespace berzerk
         private List<Robot> robots = new List<Robot>();
         private Direction[,] cells = new Direction[3, 5] {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
 
-        public Arena(Player plr, int playerEntryPos, UI hud)
+        public Arena(Player plr, PlayerEnterPosition playerEntryPos, UI hud)
         {
             player = plr;
 
@@ -25,11 +25,6 @@ namespace berzerk
 
             GenerateArena(playerEntryPos); 
             GenerateRobots(hud);  
-        }
-
-        public List<Wall> ReturnArenaWalls()
-        {
-            return arenaWalls;
         }
 
         public BulletManager ReturnArenaBulletManager()
@@ -80,8 +75,7 @@ namespace berzerk
             return false;
         }
 
-        //playerEnterPos 0 - left, 1 - top, 2 - right, 3 - bottom
-        private void GenerateArena(int playerEnterPos)
+        private void GenerateArena(PlayerEnterPosition playerEnterPos)
         {
             //Arena outside walls
             arenaWalls.Add( new Wall(player, 160f, 20f,  false));
@@ -124,24 +118,23 @@ namespace berzerk
             arenaWalls.Add(new Wall(player, 560f, 300f, true, 10));
 
             switch(playerEnterPos)
-            {
-                
-                case 0:
+            {                
+                case PlayerEnterPosition.Left:
                     arenaWalls.Add( new Wall(player, 160f, 160f,  false));
                     arenaWalls[arenaWalls.Count - 1].SetAsEntryWall();
                 break;
 
-                case 1:
+                case PlayerEnterPosition.Top:
                     arenaWalls.Add( new Wall(player, 360f, 10f,  true));
                     arenaWalls[arenaWalls.Count - 1].SetAsEntryWall();
                 break;
 
-                case 2:
+                case PlayerEnterPosition.Right:
                     arenaWalls.Add( new Wall(player, 650f, 160f,  false));
                     arenaWalls[arenaWalls.Count - 1].SetAsEntryWall();
                 break;
 
-                case 3:
+                case PlayerEnterPosition.Bottom:
                     arenaWalls.Add( new Wall(player, 360f, 440f,  true));
                     arenaWalls[arenaWalls.Count - 1].SetAsEntryWall();
                 break;

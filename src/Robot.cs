@@ -88,7 +88,7 @@ namespace berzerk
         public void KillRobot()
         {
             isRobotDead = true;
-            hud.addPoints();
+            hud.AddPoints();
         }
 
         public bool GetRobotStatus()

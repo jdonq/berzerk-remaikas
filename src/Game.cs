@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Collections.Generic;
 using Raylib_cs;
 
 
@@ -14,9 +13,12 @@ namespace berzerk
         Texture2D gradient;
         MainMenu menu = new MainMenu();
         Timer deathStateTimer = new Timer(2);
-
         GameState gameState = GameState.Menu;
         
+        public Game()
+        {
+            InitializeContent();
+        }
 
         public void InitializeContent()
         {
@@ -34,7 +36,7 @@ namespace berzerk
                 if(menu.getGameState())
                 {
                     gameState = GameState.Game;
-                    //InitializeContent();      ---------------------------------!!!!!!!!!!
+                    InitializeContent();
                 }
             } else {
                 firstArena.UpdateEntity();
@@ -61,7 +63,7 @@ namespace berzerk
                         player = new Player(new Vector2 (400f, 390f));
                     }
 
-                    firstArena = new Arena(player, enterPos, hud);
+                    firstArena = new Arena(player, (PlayerEnterPosition)enterPos, hud);
                     player.SetBulletManager(firstArena.ReturnArenaBulletManager());
                 }
 
@@ -81,7 +83,9 @@ namespace berzerk
             if(gameState == GameState.Menu)
             {
                 menu.DrawMenu();
-            } else {
+            } 
+            else 
+            {
                 firstArena.DrawEntity();
                 Raylib.DrawText("Berzerk", 12, 12, 25, Color.RED);
                 hud.DrawEntity();

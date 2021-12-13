@@ -2,11 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <GenerateProgramFile>false</GenerateProgramFile>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Raylib-cs" Version="3.7.0.1" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit.Console" Version="3.13.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.0-beta.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
   </ItemGroup>
 
 </Project>

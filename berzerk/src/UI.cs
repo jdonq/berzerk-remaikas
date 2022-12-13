@@ -9,20 +9,22 @@ namespace berzerk
 
         public void UpdateEntity()
         {
-            
+
         }
 
-        public void AddPoints(){
+        public void AddPoints()
+        {
             score += 50;
         }
 
-        public void ResetPoints(){
+        public void ResetPoints()
+        {
             score = 0;
         }
 
         public void DrawEntity()
         {
-            Raylib.DrawText("Score: " + score.ToString(), (Raylib.GetScreenWidth() - Raylib.GetScreenHeight())/2 + 20, Raylib.GetScreenHeight() - 40, 20, Color.GREEN);
+            Raylib.DrawText("Score: " + score.ToString(), (Raylib.GetScreenWidth() - Raylib.GetScreenHeight()) / 2 + 20, Raylib.GetScreenHeight() - 40, 20, Color.GREEN);
         }
     }
 }

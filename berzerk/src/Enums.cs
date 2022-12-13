@@ -1,4 +1,4 @@
-namespace berzerk 
+namespace berzerk
 {
     enum GameState
     {
@@ -6,7 +6,7 @@ namespace berzerk
         Game
     }
 
-    enum Direction : int
+    public enum Direction : int
     {
         Start = -1,
         Unvisited = 0,

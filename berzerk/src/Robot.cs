@@ -1,7 +1,7 @@
-using System.Numerics;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
-using Raylib_cs;
+using System.Numerics;
 
 
 namespace berzerk
@@ -33,25 +33,27 @@ namespace berzerk
             player = plr;
             bulletManager = blt;
             robotCollision = new Rectangle(startingPos.X, startingPos.Y, 22f, 36f);
-            robotAnimationFrame = new Rectangle(0f, 0f, (float)robotTex.width/13f, (float)robotTex.height);
+            robotAnimationFrame = new Rectangle(0f, 0f, (float)robotTex.width / 13f, (float)robotTex.height);
             blt.AddRobot(this);
         }
 
         public void UpdateEntity()
         {
-            if(coolDownTimer.UpdateTimer() && canRobotMove == false && !isRobotDead)
+            if (coolDownTimer.UpdateTimer() && canRobotMove == false && !isRobotDead)
             {
                 canRobotMove = true;
-                if(isOnLeftSide)
+                if (isOnLeftSide)
                 {
                     currentRobotFrame = 7;
-                } else {
+                }
+                else
+                {
                     currentRobotFrame = 10;
                 }
                 moveTimer.ResetTimer();
             }
 
-            if(moveTimer.UpdateTimer() && canRobotMove == true && !isRobotDead)
+            if (moveTimer.UpdateTimer() && canRobotMove == true && !isRobotDead)
             {
                 robotCollision.x = MathF.Round(robotCollision.x);
                 robotCollision.y = MathF.Round(robotCollision.y);
@@ -59,23 +61,23 @@ namespace berzerk
                 coolDownTimer.ResetTimer();
             }
 
-            if(canRobotMove && !isRobotDead)
+            if (canRobotMove && !isRobotDead)
             {
                 MoveRobot();
             }
 
-            if(shootingTimer.UpdateTimer() && !isRobotDead)
+            if (shootingTimer.UpdateTimer() && !isRobotDead)
             {
                 ShootBullet();
             }
 
-            if(framesCounter >= (60/framesSpeed))
+            if (framesCounter >= (60 / framesSpeed))
             {
                 framesCounter = 0;
                 currentRobotFrame++;
 
-                if(!canRobotMove)
-                AnimateRobotIdle();
+                if (!canRobotMove)
+                    AnimateRobotIdle();
 
                 AnimateRobotMovement();
             }
@@ -103,29 +105,29 @@ namespace berzerk
 
         public void DrawEntity()
         {
-            if(!isRobotDead)
-            Raylib.DrawTextureRec(robotTex, robotAnimationFrame, new Vector2(robotCollision.x, robotCollision.y), Color.GREEN);
+            if (!isRobotDead)
+                Raylib.DrawTextureRec(robotTex, robotAnimationFrame, new Vector2(robotCollision.x, robotCollision.y), Color.GREEN);
         }
 
         private void MoveRobot()
         {
-            if(player.GetPlayerCollision().x - robotCollision.x < 0)
+            if (player.GetPlayerCollision().x - robotCollision.x < 0)
             {
                 isOnLeftSide = true;
                 CheckLastSide();
                 robotCollision.x -= 0.5f;
             }
-            if(player.GetPlayerCollision().x - robotCollision.x > 0)
+            if (player.GetPlayerCollision().x - robotCollision.x > 0)
             {
                 isOnLeftSide = false;
                 CheckLastSide();
                 robotCollision.x += 0.5f;
             }
-            if(player.GetPlayerCollision().y - robotCollision.y < 0)
+            if (player.GetPlayerCollision().y - robotCollision.y < 0)
             {
                 robotCollision.y -= 0.5f;
             }
-            if(player.GetPlayerCollision().y - robotCollision.y > 0)
+            if (player.GetPlayerCollision().y - robotCollision.y > 0)
             {
                 robotCollision.y += 0.5f;
             }
@@ -138,25 +140,25 @@ namespace berzerk
             float xDist = player.GetPlayerCollision().x - robotCollision.x;
             float yDist = player.GetPlayerCollision().y - robotCollision.y;
             bool isxDistSmaller = true;
-            
-            if(Math.Abs(xDist) > Math.Abs(yDist))isxDistSmaller = false;
 
-            if(xDist > 0 && xDist < 150 && !isxDistSmaller)
+            if (Math.Abs(xDist) > Math.Abs(yDist)) isxDistSmaller = false;
+
+            if (xDist > 0 && xDist < 150 && !isxDistSmaller)
             {
                 Bullet blt = new Bullet(new Vector2(1f, 0f), new Vector2(robotCollision.x + 18f, robotCollision.y + 20f), false);
                 bulletManager.AddBullet(blt);
-            } 
-            else if(xDist < 0 && xDist > -150 && !isxDistSmaller)
+            }
+            else if (xDist < 0 && xDist > -150 && !isxDistSmaller)
             {
                 Bullet blt = new Bullet(new Vector2(-1f, 0f), new Vector2(robotCollision.x - 6f, robotCollision.y + 20f), false);
                 bulletManager.AddBullet(blt);
-            } 
-            else if(yDist < 0 && xDist > -150 && isxDistSmaller)
+            }
+            else if (yDist < 0 && xDist > -150 && isxDistSmaller)
             {
                 Bullet blt = new Bullet(new Vector2(0f, -1f), new Vector2(robotCollision.x + 8f, robotCollision.y - 6f), true);
                 bulletManager.AddBullet(blt);
-            } 
-            else if(xDist > 0 && xDist < 150 && isxDistSmaller)
+            }
+            else if (xDist > 0 && xDist < 150 && isxDistSmaller)
             {
                 Bullet blt = new Bullet(new Vector2(0f, 1f), new Vector2(robotCollision.x + 8f, robotCollision.y + 40f), true);
                 bulletManager.AddBullet(blt);
@@ -165,45 +167,45 @@ namespace berzerk
 
         private void CheckCollision()
         {
-            foreach(Wall wx in walls)
+            foreach (Wall wx in walls)
             {
-                if(Raylib.CheckCollisionRecs(robotCollision, wx.ReturnWallCollision()))
+                if (Raylib.CheckCollisionRecs(robotCollision, wx.ReturnWallCollision()))
                 {
-                    if(!isRobotDead)KillRobot();
+                    if (!isRobotDead) KillRobot();
                 }
             }
 
-            if(Raylib.CheckCollisionRecs(robotCollision, player.GetPlayerCollision()))
+            if (Raylib.CheckCollisionRecs(robotCollision, player.GetPlayerCollision()))
             {
-                if(!isRobotDead)player.KillPlayer();
+                if (!isRobotDead) player.KillPlayer();
             }
         }
 
         private void AnimateRobotMovement()
-        {            
-            if(currentRobotFrame > 9 && isOnLeftSide) 
+        {
+            if (currentRobotFrame > 9 && isOnLeftSide)
                 currentRobotFrame = 7;
-            else if(currentRobotFrame > 12 && !isOnLeftSide) 
+            else if (currentRobotFrame > 12 && !isOnLeftSide)
                 currentRobotFrame = 10;
 
-            robotAnimationFrame.x = (float)currentRobotFrame*(float)robotTex.width/13f;
+            robotAnimationFrame.x = (float)currentRobotFrame * (float)robotTex.width / 13f;
         }
 
         private void AnimateRobotIdle()
         {
-            if(currentRobotFrame > 6) currentRobotFrame = 0;
+            if (currentRobotFrame > 6) currentRobotFrame = 0;
 
-            robotAnimationFrame.x = (float)currentRobotFrame*(float)robotTex.width/13f;
+            robotAnimationFrame.x = (float)currentRobotFrame * (float)robotTex.width / 13f;
         }
 
         private void CheckLastSide()
         {
-            if(lastSide != isOnLeftSide && !isOnLeftSide)
+            if (lastSide != isOnLeftSide && !isOnLeftSide)
             {
                 robotAnimationFrame.x = 220f;
             }
 
-            if(lastSide != isOnLeftSide && isOnLeftSide)
+            if (lastSide != isOnLeftSide && isOnLeftSide)
             {
                 robotAnimationFrame.x = 154f;
             }

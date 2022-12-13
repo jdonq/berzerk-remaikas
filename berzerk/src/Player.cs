@@ -1,5 +1,5 @@
-using System.Numerics;
 using Raylib_cs;
+using System.Numerics;
 
 
 namespace berzerk
@@ -9,10 +9,10 @@ namespace berzerk
         private const float LeftSideFrame = 154f;
 
         private Vector2 playerPosition;
-        
+
         private static Texture2D playerTex = Raylib.LoadTexture("data/player.png");
-        private Rectangle playerFrame = new Rectangle(0.0f, 0.0f, (float)playerTex.width/12f, (float)playerTex.height);
-        private Rectangle playerCollider = new Rectangle(0.0f, 0.0f, (float)playerTex.width/12f, (float)playerTex.height);
+        private Rectangle playerFrame = new Rectangle(0.0f, 0.0f, (float)playerTex.width / 12f, (float)playerTex.height);
+        private Rectangle playerCollider = new Rectangle(0.0f, 0.0f, (float)playerTex.width / 12f, (float)playerTex.height);
         private BulletManager bulletManager;
 
         private int currentPlayerFrame = 0;
@@ -28,10 +28,11 @@ namespace berzerk
             playerPosition = startingPosition;
         }
 
-        public void SetBulletManager(BulletManager blt){
+        public void SetBulletManager(BulletManager blt)
+        {
             bulletManager = blt;
         }
-        
+
         public Rectangle GetPlayerCollision()
         {
             return playerCollider;
@@ -49,20 +50,22 @@ namespace berzerk
 
         public void UpdateEntity()
         {
-            if(!isPlayerDead)MovePlayer();
+            if (!isPlayerDead) MovePlayer();
 
-            if(isPlayerMoving && !isPlayerDead)
+            if (isPlayerMoving && !isPlayerDead)
             {
                 AnimatePlayerMovement();
-            } 
-            else if(isPlayerDead) 
+            }
+            else if (isPlayerDead)
             {
                 AnimatePlayerDeath();
-            } else {
+            }
+            else
+            {
 
                 Shoot();
 
-                if(!isOnLeftSide)playerFrame.x = 0f;
+                if (!isOnLeftSide) playerFrame.x = 0f;
                 else playerFrame.x = LeftSideFrame;
             }
         }
@@ -76,25 +79,25 @@ namespace berzerk
         {
             isPlayerMoving = false;
 
-            if(Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
             {
                 playerPosition.X += 2.0f;
                 isOnLeftSide = false;
                 isPlayerMoving = true;
             }
-            else if(Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
+            else if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
             {
                 playerPosition.X -= 2.0f;
                 isOnLeftSide = true;
                 isPlayerMoving = true;
             }
-            
-            if(Raylib.IsKeyDown(KeyboardKey.KEY_UP))
+
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_UP))
             {
                 playerPosition.Y -= 2.0f;
                 isPlayerMoving = true;
             }
-            else if(Raylib.IsKeyDown(KeyboardKey.KEY_DOWN))
+            else if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN))
             {
                 playerPosition.Y += 2.0f;
                 isPlayerMoving = true;
@@ -106,17 +109,17 @@ namespace berzerk
 
         private void AnimatePlayerMovement()
         {
-            if(framesCounter >= (60/framesSpeed))
+            if (framesCounter >= (60 / framesSpeed))
             {
                 framesCounter = 0;
 
-                if(!isOnLeftSide)currentPlayerFrame++;
+                if (!isOnLeftSide) currentPlayerFrame++;
                 else currentPlayerFrame--;
 
-                if(currentPlayerFrame > 3 && !isOnLeftSide) currentPlayerFrame = 0;
-                if(currentPlayerFrame < 4 && isOnLeftSide) currentPlayerFrame = 7;
+                if (currentPlayerFrame > 3 && !isOnLeftSide) currentPlayerFrame = 0;
+                if (currentPlayerFrame < 4 && isOnLeftSide) currentPlayerFrame = 7;
 
-                playerFrame.x = (float)currentPlayerFrame*(float)playerTex.width/12f;
+                playerFrame.x = (float)currentPlayerFrame * (float)playerTex.width / 12f;
             }
 
             framesCounter++;
@@ -124,15 +127,15 @@ namespace berzerk
 
         private void AnimatePlayerDeath()
         {
-            if(framesCounter >= (60/framesSpeed))
+            if (framesCounter >= (60 / framesSpeed))
             {
                 framesCounter = 0;
 
                 currentPlayerFrame--;
 
-                if(currentPlayerFrame < 8) currentPlayerFrame = 11;
+                if (currentPlayerFrame < 8) currentPlayerFrame = 11;
 
-                playerFrame.x = (float)currentPlayerFrame*(float)playerTex.width/12f;
+                playerFrame.x = (float)currentPlayerFrame * (float)playerTex.width / 12f;
             }
 
             framesCounter++;
@@ -140,25 +143,25 @@ namespace berzerk
 
         private void Shoot()
         {
-            if(Raylib.IsKeyPressed(KeyboardKey.KEY_D))
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_D))
             {
                 Bullet blt = new Bullet(new Vector2(1f, 0f), new Vector2(playerPosition.X + 18f, playerPosition.Y + 20f), false);
                 bulletManager.AddBullet(blt);
             }
 
-            if(Raylib.IsKeyPressed(KeyboardKey.KEY_A))
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_A))
             {
                 Bullet blt = new Bullet(new Vector2(-1f, 0f), new Vector2(playerPosition.X - 6f, playerPosition.Y + 20f), false);
                 bulletManager.AddBullet(blt);
             }
 
-            if(Raylib.IsKeyPressed(KeyboardKey.KEY_W))
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
             {
                 Bullet blt = new Bullet(new Vector2(0f, -1f), new Vector2(playerPosition.X + 8f, playerPosition.Y - 6f), true);
                 bulletManager.AddBullet(blt);
             }
 
-            if(Raylib.IsKeyPressed(KeyboardKey.KEY_S))
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
             {
                 Bullet blt = new Bullet(new Vector2(0f, 1f), new Vector2(playerPosition.X + 8f, playerPosition.Y + 40f), true);
                 bulletManager.AddBullet(blt);

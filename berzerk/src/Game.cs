@@ -1,5 +1,5 @@
-using System.Numerics;
 using Raylib_cs;
+using System.Numerics;
 
 
 namespace berzerk
@@ -14,7 +14,7 @@ namespace berzerk
         MainMenu menu = new MainMenu();
         Timer deathStateTimer = new Timer(2);
         GameState gameState = GameState.Menu;
-        
+
         public Game()
         {
             InitializeContent();
@@ -22,46 +22,48 @@ namespace berzerk
 
         public void InitializeContent()
         {
-            player = new Player(new Vector2 (180f, 200f));
+            player = new Player(new Vector2(180f, 200f));
             firstArena = new Arena(player, 0, hud);
             player.SetBulletManager(firstArena.ReturnArenaBulletManager());
             gradient = Raylib.LoadTextureFromImage(horizontalGradient);
         }
-        
+
         public void Update()
         {
-            if(gameState == GameState.Menu)
+            if (gameState == GameState.Menu)
             {
                 menu.UpdateMenu();
-                if(menu.getGameState())
+                if (menu.getGameState())
                 {
                     gameState = GameState.Game;
                     InitializeContent();
                     hud.ResetPoints();
                 }
-            } else {
+            }
+            else
+            {
                 firstArena.UpdateEntity();
                 player.UpdateEntity();
 
-                if(firstArena.CheckIfPlayerLeftArena())
+                if (firstArena.CheckIfPlayerLeftArena())
                 {
                     int enterPos = firstArena.GetExitedZone();
-                    
-                    if(enterPos == 0)
+
+                    if (enterPos == 0)
                     {
-                        player = new Player(new Vector2 (180f, 200f));
+                        player = new Player(new Vector2(180f, 200f));
                     }
-                    if(enterPos == 1)
+                    if (enterPos == 1)
                     {
-                        player = new Player(new Vector2 (400f, 30f));
+                        player = new Player(new Vector2(400f, 30f));
                     }
-                    if(enterPos == 2)
+                    if (enterPos == 2)
                     {
-                        player = new Player(new Vector2 (620f, 200f));
+                        player = new Player(new Vector2(620f, 200f));
                     }
-                    if(enterPos == 3)
+                    if (enterPos == 3)
                     {
-                        player = new Player(new Vector2 (400f, 390f));
+                        player = new Player(new Vector2(400f, 390f));
                     }
 
                     firstArena = new Arena(player, (PlayerEnterPosition)enterPos, hud);
@@ -69,7 +71,7 @@ namespace berzerk
                 }
 
 
-                if(player.ReturnPlayerState() && deathStateTimer.UpdateTimer())
+                if (player.ReturnPlayerState() && deathStateTimer.UpdateTimer())
                 {
                     gameState = GameState.Menu;
                     menu.setMenuState();
@@ -81,11 +83,11 @@ namespace berzerk
         {
             Raylib.ClearBackground(Color.WHITE);
             Raylib.DrawTexture(gradient, 0, 0, new Color(125, 255, 0, 125));
-            if(gameState == GameState.Menu)
+            if (gameState == GameState.Menu)
             {
                 menu.DrawMenu();
-            } 
-            else 
+            }
+            else
             {
                 firstArena.DrawEntity();
                 Raylib.DrawText("Berzerk", 12, 12, 25, Color.RED);

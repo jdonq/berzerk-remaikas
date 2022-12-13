@@ -1,19 +1,19 @@
-using System.Numerics;
 using Raylib_cs;
+using System.Numerics;
 
 
 namespace berzerk
 {
-    class Bullet: IEntity
+    class Bullet : IEntity
     {
         private Vector2 direction;
         private Rectangle bulletCollider;
         private bool bulletStatus = true;
-        
+
         public Bullet(Vector2 dir, Vector2 startingPos, bool isVertical)
         {
             direction = dir;
-            if(!isVertical)bulletCollider = new Rectangle(startingPos.X, startingPos.Y, 10f, 5f);
+            if (!isVertical) bulletCollider = new Rectangle(startingPos.X, startingPos.Y, 10f, 5f);
             else bulletCollider = new Rectangle(startingPos.X, startingPos.Y, 5f, 10f);
         }
 
@@ -34,12 +34,12 @@ namespace berzerk
 
         public void UpdateEntity()
         {
-            if(bulletStatus)moveBullet();
+            if (bulletStatus) moveBullet();
         }
 
         public void DrawEntity()
         {
-            if(bulletStatus)Raylib.DrawRectangleRec(bulletCollider, Color.GREEN);
+            if (bulletStatus) Raylib.DrawRectangleRec(bulletCollider, Color.GREEN);
         }
 
         private void moveBullet()
@@ -47,6 +47,6 @@ namespace berzerk
             bulletCollider.x += (direction.X * 4f);
             bulletCollider.y += (direction.Y * 4f);
         }
-        
+
     }
 }

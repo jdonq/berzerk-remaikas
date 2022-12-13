@@ -7,7 +7,7 @@ namespace berzerk
         static void Main(string[] args)
         {
             InitializeWindow();
-            
+
             Game berzerk = new Game();
 
             while (!Raylib.WindowShouldClose())

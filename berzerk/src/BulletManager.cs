@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Raylib_cs;
+using System.Collections.Generic;
 
 namespace berzerk
 {
@@ -28,9 +28,9 @@ namespace berzerk
 
         public void UpdateEntity()
         {
-            if(bullets.Count != 0)
+            if (bullets.Count != 0)
             {
-                foreach(Bullet blt in bullets)
+                foreach (Bullet blt in bullets)
                 {
                     blt.UpdateEntity();
                 }
@@ -41,33 +41,33 @@ namespace berzerk
 
         public void DrawEntity()
         {
-            if(bullets.Count != 0)
+            if (bullets.Count != 0)
             {
-                foreach(Bullet blt in bullets)blt.DrawEntity();
+                foreach (Bullet blt in bullets) blt.DrawEntity();
             }
         }
 
         private void CheckBulletCollisions()
         {
-            foreach(Bullet bl in bullets)
+            foreach (Bullet bl in bullets)
             {
-                foreach(Wall wx in arenaWalls)
+                foreach (Wall wx in arenaWalls)
                 {
-                    if(Raylib.CheckCollisionRecs(wx.ReturnWallCollision(), bl.ReturnBulletCollision()))
+                    if (Raylib.CheckCollisionRecs(wx.ReturnWallCollision(), bl.ReturnBulletCollision()))
                     {
                         bl.DestroyBullet();
                     }
 
-                    if(Raylib.CheckCollisionRecs(bl.ReturnBulletCollision(), player.GetPlayerCollision()))
+                    if (Raylib.CheckCollisionRecs(bl.ReturnBulletCollision(), player.GetPlayerCollision()))
                     {
-                        if(bl.returnBulletStatus())player.KillPlayer();
+                        if (bl.returnBulletStatus()) player.KillPlayer();
                         bl.DestroyBullet();
                     }
                 }
 
-                foreach(Robot rb in robots)
+                foreach (Robot rb in robots)
                 {
-                    if(Raylib.CheckCollisionRecs(bl.ReturnBulletCollision(), rb.ReturnRobotCollision()) && !rb.GetRobotStatus())
+                    if (Raylib.CheckCollisionRecs(bl.ReturnBulletCollision(), rb.ReturnRobotCollision()) && !rb.GetRobotStatus())
                     {
                         bl.DestroyBullet();
                         rb.KillRobot();

@@ -1,11 +1,10 @@
-/*using System.Numerics;
+using System.Numerics;
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using Raylib_cs;
 
 
-namespace berzerk 
+namespace berzerk.tests
 {
     [TestFixture]
     class Tests
@@ -122,4 +121,4 @@ namespace berzerk
             lastSide = isOnLeftSide;
         }
     }
-}*/
+}
